@@ -1,3 +1,10 @@
+import { WORLD, getBlockType, getRandomSpawnPoint } from './world.js';
+import { PLAYER, INPUT, updatePlayerState, setHotbarSlot } from './player.js';
+
+
+
+
+
 const PASSWORD = "minecraft"; // change this to whatever you want
 
 const homeScreen = document.getElementById("home-screen");
@@ -18,8 +25,6 @@ loginBtn.addEventListener("click", () => {
 
 
 
-import { WORLD, getBlockType, getRandomSpawnPoint } from './world.js';
-import { PLAYER, INPUT, updatePlayerState, setHotbarSlot } from './player.js';
 
 const canvas = document.getElementById('game-canvas');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
