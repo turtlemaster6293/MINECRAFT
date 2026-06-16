@@ -22,10 +22,6 @@ loginBtn.addEventListener("click", () => {
   }
 });
 
-
-
-
-
 const canvas = document.getElementById('game-canvas');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -106,7 +102,7 @@ document.addEventListener('keydown', (event) => {
   if (event.key === 'a' || event.key === 'A') INPUT.left = true;
   if (event.key === 'd' || event.key === 'D') INPUT.right = true;
   if (event.key === ' ') INPUT.jump = true;
-  if (!isNaN(event.key) && event.key !== '0') setHotbarSlot(Number(event.key) - 1);
+  if (/^[1-9]$/.test(event.key)) setHotbarSlot(Number(event.key) - 1);
 });
 
 document.addEventListener('keyup', (event) => {
