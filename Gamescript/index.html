@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Webcraft 3D</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="home-screen" class="screen active">
+    <div class="login-box">
+      <h1>Webcraft 3D</h1>
+      <p>Enter password to play</p>
+      <input id="password-input" type="password" placeholder="Password">
+      <button id="login-btn">Enter World</button>
+      <p id="login-error"></p>
+    </div>
+  </div>
+
+  <div id="game-screen" class="screen">
+    <canvas id="game-canvas"></canvas>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/three.min.js"></script>
+  <script type="module" src="world.js"></script>
+  <script type="module" src="player.js"></script>
+  <script type="module" src="main.js"></script>
+</body>
+
+</html>

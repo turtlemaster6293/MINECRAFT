@@ -209,20 +209,189 @@ button:hover {
   overflow: auto;
   pointer-events: auto;
 }
+#inventory-panel {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(550px, calc(100vw - 40px));
+  background: rgba(8, 12, 22, 0.98) !important;
+  border: 2px solid rgba(255,255,255,0.12) !important;
+  border-radius: 24px !important;
+  padding: 0 !important;
+  z-index: 1000;
+  pointer-events: auto;
+}
+.inventory-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.inventory-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.inventory-header h2 {
+  margin: 0;
+  font-size: 1.4rem;
+  color: #f8f3e9;
+}
+.close-btn {
+  background: rgba(255,255,255,0.08);
+  border: none;
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.close-btn:hover {
+  background: rgba(255,255,255,0.15);
+}
+.inventory-tabs {
+  display: flex;
+  gap: 10px;
+  padding: 12px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.tab-btn {
+  flex: 1;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.05);
+  color: #d7dfe8;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.tab-btn.active {
+  background: #8bc34a;
+  color: #071107;
+}
+.inventory-tab {
+  display: none;
+  padding: 20px;
+  flex: 1;
+  overflow-y: auto;
+}
+.inventory-tab.active {
+  display: block;
+}
+.inventory-grid {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.inventory-slot {
+  width: 100%;
+  aspect-ratio: 1;
+  background: rgba(0,0,0,0.5);
+  border: 2px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
+  padding: 4px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  position: relative;
+  transition: all 0.15s ease;
+}
+.inventory-slot:hover {
+  border-color: rgba(139, 195, 74, 0.5);
+  background: rgba(139, 195, 74, 0.08);
+}
+.inventory-slot.active {
+  border-color: #8bc34a;
+  box-shadow: 0 0 0 4px rgba(139,195,74,0.12);
+}
+.inventory-slot-count {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  font-size: 0.7rem;
+  color: #eae7de;
+  background: rgba(0,0,0,0.8);
+  padding: 1px 3px;
+  border-radius: 2px;
+}
+.armor-slots {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+.armor-slot {
+  width: 100%;
+  height: 50px;
+  background: rgba(0,0,0,0.5);
+  border: 2px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  padding: 8px;
+}
+.crafting-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.crafting-slot {
+  width: 100%;
+  aspect-ratio: 1;
+  background: rgba(0,0,0,0.5);
+  border: 2px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.craft-btn {
+  width: 100%;
+  padding: 12px;
+  background: #8bc34a;
+  color: #071107;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.craft-btn:hover {
+  background: #9bd34b;
+}
 #creative-menu {
-  padding: 16px;
-  border-radius: 22px;
-  background: rgba(8, 12, 22, 0.96);
-  border: 1px solid rgba(255,255,255,0.08);
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(520px, calc(100vw - 40px));
+  background: rgba(8, 12, 22, 0.98) !important;
+  border: 2px solid rgba(255,255,255,0.12) !important;
+  border-radius: 24px !important;
+  padding: 20px !important;
+  z-index: 1001;
+  pointer-events: auto;
 }
 #creative-menu header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  margin-bottom: 20px;
 }
 #creative-menu header h2 {
   margin: 0;
+  flex: 1;
 }
 .category-row {
   display: flex;
@@ -242,6 +411,8 @@ button:hover {
   display: grid;
   gap: 12px;
   grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  max-height: 400px;
+  overflow-y: auto;
 }
 .item-card {
   background: rgba(255,255,255,0.05);
@@ -306,4 +477,49 @@ button:hover {
   .hotbar {
     grid-template-columns: repeat(6, minmax(40px, 1fr));
   }
+}
+.screen {
+  display: none;
+}
+
+.screen.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.login-box {
+  background: rgba(0,0,0,0.6);
+  padding: 30px;
+  border-radius: 16px;
+  text-align: center;
+  width: 300px;
+}
+
+.login-box h1 {
+  margin-bottom: 10px;
+}
+
+#password-input {
+  width: 100%;
+  padding: 12px;
+  margin: 12px 0;
+  border-radius: 8px;
+  border: none;
+}
+
+#login-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  background: #8bc34a;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#login-error {
+  color: #ff6b6b;
+  margin-top: 10px;
 }
