@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WebCraft</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+    <main id="home-screen" class="screen active">
+      <div class="shell">
+        <div class="branding">
+          <div class="logo">WebCraft</div>
+          <p>Block, build, and survive in a browser-powered 3D world.</p>
+        </div>
+        <form id="login-form" class="card">
+          <h2>Sign In</h2>
+          <div class="field">
+            <label for="username">Username</label>
+            <input id="username" name="username" type="text" autocomplete="username" required />
+          </div>
+          <div class="field">
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" autocomplete="current-password" required />
+          </div>
+          <div class="field checkbox-field">
+            <input id="remember" name="remember" type="checkbox" />
+            <label for="remember">Remember me</label>
+          </div>
+          <button type="submit" class="primary">Continue</button>
+          <div id="login-error" class="error"></div>
+        </form>
+        <div class="mode-card card">
+          <h3>Play Modes</h3>
+          <div class="mode-buttons">
+            <button id="creative-mode-btn" class="secondary" type="button">Creative Mode</button>
+            <button id="survival-mode-btn" class="secondary" type="button">Survival Mode</button>
+          </div>
+          <p>Sign in with your credentials to unlock the game.</p>
+        </div>
+      </div>
+    </main>
+
+    <main id="game-screen" class="screen">
+      <div id="hud">
+        <div id="survival-ui" class="hud-panel hidden">
+          <div class="stats-row">
+            <div class="stat-label">Health</div>
+            <div class="bar-wrap">
+              <div id="health-bar" class="stat-bar"></div>
+            </div>
+            <div id="health-text" class="stat-text">20 / 20</div>
+          </div>
+          <div class="stats-row">
+            <div class="stat-label">Hunger</div>
+            <div class="bar-wrap">
+              <div id="hunger-bar" class="stat-bar hunger"></div>
+            </div>
+            <div id="hunger-text" class="stat-text">20 / 20</div>
+          </div>
+          <div class="stats-row">
+            <div class="stat-label">Armor</div>
+            <div class="bar-wrap">
+              <div id="armor-bar" class="stat-bar armor"></div>
+            </div>
+            <div id="armor-text" class="stat-text">0%</div>
+          </div>
+        </div>
+        <div id="player-info" class="hud-panel">
+          <div id="mode-indicator">Mode: <span id="mode-type">Creative</span></div>
+          <div id="position-info">Position: <span id="position-text">0, 4, 0</span></div>
+        </div>
+        <div id="instructions" class="hud-panel small">
+          <span>WASD + Mouse to move</span>
+          <span>Space = Jump, E = Inventory, Q = Remove</span>
+          <span>Tab = Toggle Menu</span>
+        </div>
+      </div>
+
+      <div id="game-ui">
+        <canvas id="game-canvas"></canvas>
+        <div id="creative-menu" class="panel hidden">
+          <header>
+            <h2>Creative Menu</h2>
+            <button id="close-creative">Close</button>
+          </header>
+          <div class="category-row">
+            <button data-category="blocks" class="active">Blocks</button>
+            <button data-category="tools">Tools</button>
+            <button data-category="weapons">Weapons</button>
+          </div>
+          <div id="creative-items" class="items-grid"></div>
+        </div>
+        <div id="hotbar" class="hotbar"></div>
+      </div>
+    </main>
+  </div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>
