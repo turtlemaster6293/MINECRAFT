@@ -17,12 +17,16 @@ loginBtn.addEventListener("click", () => {
   if (passwordInput.value === PASSWORD) {
     homeScreen.classList.remove("active");
     gameScreen.classList.add("active");
+    
+init3D();
+
   } else {
     loginError.textContent = "Incorrect password";
   }
 });
 
-const canvas = document.getElementById('game-canvas');
+function inIt3D() {
+  const canvas = document.getElementById('game-canvas');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
@@ -211,3 +215,5 @@ function gameLoop(timestamp) {
 }
 
 requestAnimationFrame(gameLoop);
+
+}
