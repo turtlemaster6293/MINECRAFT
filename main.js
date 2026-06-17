@@ -18,7 +18,7 @@ loginBtn.addEventListener("click", () => {
     homeScreen.classList.remove("active");
     gameScreen.classList.add("active");
     
-init3D();
+inIt3D();
 
   } else {
     loginError.textContent = "Incorrect password";
