@@ -70,9 +70,18 @@ function getBlockType(id) {
 
 function getRandomSpawnPoint() {
   const x = Math.floor(WORLD.width / 2);
-  const y = 10;
-  const z = Math.floor(WORLD.depth / 2);
-  return { x, y, z };
+  const yIndex = Math.floor(WORLD.depth / 2); // world.js uses [x][y][z] where z is height
+  
+  let zHeight = WORLD.height - 1;
+  while (zHeight > 0 && !WORLD.blocks[x][yIndex][zHeight]) {
+    zHeight--;
+  }
+
+  return {
+    x: x,
+    z: yIndex, // This will be mapped to Three.js Z
+    y: zHeight + 2 // This will be mapped to Three.js Y (vertical)
+  };
 }
 
 export { WORLD, getBlockType, getRandomSpawnPoint };

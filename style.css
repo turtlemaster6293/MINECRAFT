@@ -1,3 +1,58 @@
+#game-screen::after {
+  content: '+';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 24px;
+  pointer-events: none;
+}
+
+/* Hotbar UI */
+.hotbar-container {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 5px;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 8px;
+    border-radius: 4px;
+    border: 2px solid #333;
+}
+
+.hotbar-slot {
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid #555;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.hotbar-slot.active {
+    border-color: white;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.slot-count {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    font-size: 12px;
+    color: white;
+    text-shadow: 1px 1px black;
+}
+
+.slot-emoji {
+    font-size: 24px;
+}
+
+
 * {
   box-sizing: border-box;
 }
@@ -122,6 +177,27 @@ button:hover {
   position: relative;
   overflow: hidden;
 }
+#loading-screen {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(1, 3, 8, 0.88);
+  color: #ffffff;
+  z-index: 10;
+}
+#loading-screen.hidden {
+  display: none;
+}
+.loading-box {
+  padding: 24px 32px;
+  border-radius: 20px;
+  background: rgba(8, 12, 22, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+}
 #game-ui {
   position: relative;
   width: 100%;
@@ -132,7 +208,7 @@ button:hover {
   display: block;
   width: 100%;
   min-height: 100vh;
-  background: radial-gradient(circle at center, #0c1325 0%, #02050c 60%, #000000 100%);
+  background: transparent;
 }
 #hud {
   position: absolute;
@@ -478,14 +554,12 @@ button:hover {
     grid-template-columns: repeat(6, minmax(40px, 1fr));
   }
 }
-.screen {
-  display: none;
-}
 
-.screen.active {
+#game-screen.active {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: stretch;
+  justify-content: stretch;
+  width: 100%;
   height: 100vh;
 }
 

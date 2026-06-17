@@ -1,5 +1,5 @@
 const PLAYER = {
-  position: { x: 32, y: 12, z: 32 },
+  position: { x: 32, y: 15, z: 32 },
   velocity: { x: 0, y: 0, z: 0 },
   speed: 0.08,
   jumpStrength: 0.22,
@@ -7,104 +7,81 @@ const PLAYER = {
   onGround: false,
   yaw: 0,
   pitch: 0,
-  health: 20,
-  hunger: 20,
-  armor: 0,
-  inventory: [],
-  hotbar: Array.from({ length: 9 }, () => ({ id: 'grass', count: 64 })),
+  hotbar: [
+    { id: 'grass', count: 64 },
+    null, null, null, null, null, null, null, null
+  ],
   activeSlot: 0,
-  selectedItem() {
-    return this.hotbar[this.activeSlot];
-  },
-  addItem(item) {
-    const existing = this.inventory.find(i => i.id === item.id);
+
+  addItem(itemId) {
+    const existing = this.hotbar.find(slot => slot && slot.id === itemId && slot.count < 64);
     if (existing) {
-      existing.count += item.count || 1;
-    } else {
-      this.inventory.push({ id: item.id, count: item.count || 1 });
+      existing.count++;
+      return true;
     }
+    const emptyIndex = this.hotbar.findIndex(slot => slot === null);
+    if (emptyIndex !== -1) {
+      this.hotbar[emptyIndex] = { id: itemId, count: 1 };
+      return true;
+    }
+    return false; 
   },
-  removeItem(id, count = 1) {
-    const item = this.inventory.find(i => i.id === id);
-    if (item) {
-      item.count -= count;
-      if (item.count <= 0) {
-        this.inventory = this.inventory.filter(i => i.id !== id);
-      }
-    }
+
+  removeSelectedItem() {
+    const slot = this.hotbar[this.activeSlot];
+    if (!slot) return;
+    slot.count--;
+    if (slot.count <= 0) this.hotbar[this.activeSlot] = null;
   }
 };
 
 const INPUT = {
-  forward: false,
-  backward: false,
-  left: false,
-  right: false,
-  jump: false,
-  pointerLocked: false,
-  mouseDX: 0,
-  mouseDY: 0
+  forward: false, backward: false, left: false, right: false,
+  jump: false, pointerLocked: false
 };
-
-function clamp(value, min, max) {
-  return Math.min(Math.max(value, min), max);
-}
 
 function updatePlayerState(dt, world) {
   const dirX = Math.sin(PLAYER.yaw);
   const dirZ = Math.cos(PLAYER.yaw);
-
   const rightX = Math.sin(PLAYER.yaw + Math.PI / 2);
   const rightZ = Math.cos(PLAYER.yaw + Math.PI / 2);
 
-  let moveX = 0;
-  let moveZ = 0;
-
-  if (INPUT.forward) {
-    moveX += dirX;
-    moveZ += dirZ;
-  }
-  if (INPUT.backward) {
-    moveX -= dirX;
-    moveZ -= dirZ;
-  }
-  if (INPUT.left) {
-    moveX -= rightX;
-    moveZ -= rightZ;
-  }
-  if (INPUT.right) {
-    moveX += rightX;
-    moveZ += rightZ;
-  }
+  let moveX = 0, moveZ = 0;
+  if (INPUT.forward) { moveX += dirX; moveZ += dirZ; }
+  if (INPUT.backward) { moveX -= dirX; moveZ -= dirZ; }
+  if (INPUT.left) { moveX -= rightX; moveZ -= rightZ; }
+  if (INPUT.right) { moveX += rightX; moveZ += rightZ; }
 
   const len = Math.hypot(moveX, moveZ) || 1;
-  moveX /= len;
-  moveZ /= len;
-
-  PLAYER.position.x += moveX * PLAYER.speed * dt;
-  PLAYER.position.z += moveZ * PLAYER.speed * dt;
-
-  if (INPUT.jump && PLAYER.onGround) {
-    PLAYER.velocity.y = PLAYER.jumpStrength;
-    PLAYER.onGround = false;
-  }
+  PLAYER.position.x += (moveX / len) * PLAYER.speed * dt;
+  PLAYER.position.z += (moveZ / len) * PLAYER.speed * dt;
 
   PLAYER.velocity.y += PLAYER.gravity * dt;
   PLAYER.position.y += PLAYER.velocity.y * dt;
 
-  if (PLAYER.position.y <= 3) {
-    PLAYER.position.y = 3;
-    PLAYER.velocity.y = 0;
-    PLAYER.onGround = true;
+  // Collision
+  const ix = Math.floor(PLAYER.position.x);
+  const iz = Math.floor(PLAYER.position.z);
+  let floorY = 0;
+  if (world.blocks[ix] && world.blocks[ix][iz]) {
+    for (let h = world.height - 1; h >= 0; h--) {
+      if (world.blocks[ix][iz][h]) { floorY = h + 1; break; }
+    }
   }
 
-  PLAYER.position.x = clamp(PLAYER.position.x, 1, world.width - 2);
-  PLAYER.position.z = clamp(PLAYER.position.z, 1, world.depth - 2);
-  PLAYER.position.y = clamp(PLAYER.position.y, 2, world.height + 10);
+  if (PLAYER.position.y <= floorY) {
+    PLAYER.position.y = floorY;
+    PLAYER.velocity.y = 0;
+    PLAYER.onGround = true;
+    if (INPUT.jump) {
+      PLAYER.velocity.y = PLAYER.jumpStrength;
+      PLAYER.onGround = false;
+    }
+  }
 }
 
 function setHotbarSlot(slotIndex) {
-  PLAYER.activeSlot = clamp(slotIndex, 0, PLAYER.hotbar.length - 1);
+  PLAYER.activeSlot = Math.max(0, Math.min(slotIndex, 8));
 }
 
 export { PLAYER, INPUT, updatePlayerState, setHotbarSlot };
