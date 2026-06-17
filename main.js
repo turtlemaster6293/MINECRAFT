@@ -3,26 +3,32 @@ import { PLAYER, INPUT, updatePlayerState, setHotbarSlot } from './player.js';
 
 const PASSWORD = "minecraft";
 
+// Login elements
 const homeScreen = document.getElementById("home-screen");
 const gameScreen = document.getElementById("game-screen");
 const loginBtn = document.getElementById("login-btn");
 const passwordInput = document.getElementById("password-input");
 const loginError = document.getElementById("login-error");
 
+// LOGIN BUTTON
 loginBtn.addEventListener("click", () => {
   if (passwordInput.value === PASSWORD) {
     homeScreen.classList.remove("active");
     gameScreen.classList.add("active");
 
-    play3D(); // FIXED: this now runs AFTER canvas is visible
+    play3D(); // Start the game AFTER canvas is visible
   } else {
     loginError.textContent = "Incorrect password";
   }
 });
 
+
+// ===============================
+//  START 3D GAME ENGINE
+// ===============================
 function play3D() {
 
-  // FIXED: canvas is now grabbed AFTER login, when it has real size
+  // IMPORTANT: canvas must be grabbed AFTER login
   const canvas = document.getElementById('game-canvas');
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
@@ -39,6 +45,7 @@ function play3D() {
     500
   );
 
+  // LIGHTING
   const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
   scene.add(ambientLight);
 
@@ -46,6 +53,7 @@ function play3D() {
   sunLight.position.set(40, 80, 40);
   scene.add(sunLight);
 
+  // BLOCK GEOMETRY
   const blockGeometry = new THREE.BoxGeometry(1, 1, 1);
   const blockMeshes = [];
 
@@ -63,4 +71,6 @@ function play3D() {
       metalness: 0.0
     });
 
-    const mesh =
+    const mesh = new THREE.Mesh(blockGeometry, material);
+    mesh.position.set(x, z, y);
+    mesh.userData =
