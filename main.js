@@ -2,7 +2,7 @@ import * as THREE from 'https://unpkg.com/three@0.152.0/build/three.module.js';
 import { WORLD, getBlockType, getRandomSpawnPoint } from './world.js';
 import { PLAYER, INPUT, updatePlayerState, setHotbarSlot } from './player.js';
 
-const PASSWORD = "minecraft";
+const PASSWORD = "JAKE";
 
 const homeScreen = document.getElementById("home-screen");
 const gameScreen = document.getElementById("game-screen");
@@ -22,6 +22,7 @@ function setLoading(active, message = "Loading world...") {
 //  ENGINE START
 // ---------------------------------------------------------
 function play3D() {
+  
   const canvas = document.getElementById('game-canvas');
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -107,35 +108,48 @@ function play3D() {
   document.addEventListener('pointerlockchange', () => INPUT.pointerLocked = document.pointerLockElement === canvas);
   document.addEventListener('mousemove', (e) => {
     if (!INPUT.pointerLocked) return;
-    PLAYER.yaw += e.movementX * 0.002;
+    PLAYER.yaw -= e.movementX * 0.002;
     PLAYER.pitch = Math.max(-1.5, Math.min(1.5, PLAYER.pitch - e.movementY * 0.002));
   });
 
   const raycaster = new THREE.Raycaster();
   canvas.addEventListener('mousedown', (e) => {
     if (!INPUT.pointerLocked) return;
+    
     const dir = new THREE.Vector3();
     camera.getWorldDirection(dir);
     raycaster.set(camera.position, dir);
+    
     const intersects = raycaster.intersectObjects(blockMeshes);
     const hit = intersects[0];
 
-    if (e.button === 0 && hit) { // Break
-      const { x, y, z, id } = hit.object.userData;
-      WORLD.blocks[x][y][z] = null;
-      spawnItemDrop(hit.object.position.x, hit.object.position.y, hit.object.position.z, id);
-      scene.remove(hit.object);
-      blockMeshes.splice(blockMeshes.indexOf(hit.object), 1);
-    } else if (e.button === 2 && hit) { // Place
-      const held = PLAYER.hotbar[PLAYER.activeSlot];
-      if (held) {
-        const pos = hit.point.clone().add(hit.face.normal.multiplyScalar(0.5));
-        const bx = Math.round(pos.x), by = Math.round(pos.z), bz = Math.round(pos.y);
-        if (WORLD.blocks[bx]?.[by] && !WORLD.blocks[bx][by][bz]) {
-          WORLD.blocks[bx][by][bz] = held.id;
-          addBlockMesh(bx, by, bz, held.id);
-          PLAYER.removeSelectedItem();
-          updateHotbarUI();
+    // FIX: Only allow interaction if the block is within 8 units
+    if (hit && hit.distance <= 8) { 
+      if (e.button === 0) { // Break (Left Click)
+        const { x, y, z, id } = hit.object.userData;
+        WORLD.blocks[x][y][z] = null;
+        spawnItemDrop(hit.object.position.x, hit.object.position.y, hit.object.position.z, id);
+        scene.remove(hit.object);
+        blockMeshes.splice(blockMeshes.indexOf(hit.object), 1);
+      } else if (e.button === 2) { // Place (Right Click)
+        const held = PLAYER.hotbar[PLAYER.activeSlot];
+        if (held) {
+          const pos = hit.point.clone().add(hit.face.normal.multiplyScalar(0.5));
+          const bx = Math.round(pos.x), by = Math.round(pos.z), bz = Math.round(pos.y);
+          
+          // Ensure we aren't placing a block inside the player's 2-block tall body
+          const playerFeetX = Math.floor(PLAYER.position.x);
+          const playerFeetZ = Math.floor(PLAYER.position.z);
+          const playerFeetY = Math.floor(PLAYER.position.y);
+          const isPlayerInWay = bx === playerFeetX && by === playerFeetZ && 
+                               (bz === playerFeetY || bz === playerFeetY + 1);
+
+          if (WORLD.blocks[bx]?.[by] && !WORLD.blocks[bx][by][bz] && !isPlayerInWay) {
+            WORLD.blocks[bx][by][bz] = held.id;
+            addBlockMesh(bx, by, bz, held.id);
+            PLAYER.removeSelectedItem();
+            updateHotbarUI();
+          }
         }
       }
     }
@@ -155,7 +169,7 @@ function play3D() {
       Math.sin(PLAYER.pitch),
       Math.cos(PLAYER.yaw) * Math.cos(PLAYER.pitch)
     );
-    camera.position.set(PLAYER.position.x, PLAYER.position.y + 0.6, PLAYER.position.z);
+    camera.position.set(PLAYER.position.x, PLAYER.position.y + 1.3, PLAYER.position.z);
     camera.lookAt(new THREE.Vector3().copy(camera.position).add(dir));
 
     // Outline
@@ -208,8 +222,8 @@ loginBtn.addEventListener("click", () => {
 document.addEventListener('keydown', (e) => {
   if (e.key === 'w' || e.key === 'W') INPUT.forward = true;
   if (e.key === 's' || e.key === 'S') INPUT.backward = true;
-  if (e.key === 'a' || e.key === 'A') INPUT.left = true;
-  if (e.key === 'd' || e.key === 'D') INPUT.right = true;
+  if (e.key === 'a' || e.key === 'A') INPUT.right = true;
+  if (e.key === 'd' || e.key === 'D') INPUT.left = true;
   if (e.key === ' ') INPUT.jump = true;
   if (/^[1-9]$/.test(e.key)) setHotbarSlot(Number(e.key) - 1);
 });
@@ -217,7 +231,7 @@ document.addEventListener('keydown', (e) => {
 document.addEventListener('keyup', (e) => {
   if (e.key === 'w' || e.key === 'W') INPUT.forward = false;
   if (e.key === 's' || e.key === 'S') INPUT.backward = false;
-  if (e.key === 'a' || e.key === 'A') INPUT.left = false;
-  if (e.key === 'd' || e.key === 'D') INPUT.right = false;
+  if (e.key === 'a' || e.key === 'A') INPUT.right = false;
+  if (e.key === 'd' || e.key === 'D') INPUT.left = false;
   if (e.key === ' ') INPUT.jump = false;
 });

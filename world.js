@@ -1,3 +1,5 @@
+
+const worldSize = prompt("HOW LARGE SHOULD YOUR WORLD BE? (RECOMMENDED: 250, MAX: 500)");
 // Simple Perlin-like noise using sine functions for terrain generation
 function noise(x, y) {
   return Math.sin(x * 0.1) * Math.cos(y * 0.1) + Math.sin(x * 0.05) * Math.cos(y * 0.05);
@@ -12,9 +14,9 @@ function getHeight(x, y) {
 }
 
 const WORLD = {
-  width: 64,
-  depth: 64,
-  height: 16,
+  width: worldSize,
+  depth: worldSize,
+  height: worldSize,
   blocks: [],
   blockTypes: [
     { id: 'grass', label: 'Grass Block', type: 'block', emoji: '🟩', color: '#6A8A3F' },
