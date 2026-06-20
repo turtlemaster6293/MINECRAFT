@@ -30,6 +30,7 @@ const PLAYER = {
     return false; 
   },
 
+  
   removeSelectedItem() {
     const slot = this.hotbar[this.activeSlot];
     if (!slot) return;
